@@ -3,8 +3,12 @@ package com.wdb32.meetup;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
+	String rootCause = "Main Activity";
+	double lat, lon;
+	TextView view;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
