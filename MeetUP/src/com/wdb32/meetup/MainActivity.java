@@ -18,13 +18,26 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		Log.i("onCreate", "Bundle");
+		doThis();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+		Log.i("onCreate", "Menu");
+		doThis();
 		return true;
+	}
+
+	public void doThis() {
+		getGPS();
+		Log.i("TESTING", lat + "," + lon);
+		view = new TextView(this);
+		view.setId(R.id.gpstemp);
+		view.setText(lat + "," + lon);
+		view.invalidate();
 	}
 
 	public double calculateMiles(double latitude, double longitude) {
@@ -51,8 +64,10 @@ public class MainActivity extends Activity {
 	}
 
 	public void getGPS() {
+		// http://developer.android.com/reference/android/location/LocationManager.html
 		try {
 			Log.i(rootCause, "Getting GPS");
+
 			LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 			Location location = lm
 					.getLastKnownLocation(LocationManager.GPS_PROVIDER);
