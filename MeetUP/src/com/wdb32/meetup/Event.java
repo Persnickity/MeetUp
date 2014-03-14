@@ -1,5 +1,7 @@
 package com.wdb32.meetup;
 
+import com.google.gson.JsonObject;
+
 public class Event {
 	double lat, lon;
 	String name;
@@ -8,10 +10,11 @@ public class Event {
 
 	}
 
-	public Event(String nam, double latitude, double longitude) {
-		this.name = nam;
-		this.lat = latitude;
-		this.lon = longitude;
+	public Event(JsonObject object) {
+
+		name = object.get("name").getAsString();
+		lat = object.get("Latitude").getAsDouble();
+		lon = object.get("longitude").getAsDouble();
 	}
 
 	public double getLat() {
