@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -16,7 +17,7 @@ public class MainActivity extends Activity {
 	String rootCause = "Main Activity";
 	double lat, lon;
 	TextView view;
-	Button button;
+	Button getGPS;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +35,29 @@ public class MainActivity extends Activity {
 	}
 
 	public void doThis() {
-		getGPS();
+		getGPS = (Button) findViewById(R.id.gpsButton);
 		view = (TextView) findViewById(R.id.gpstemp);
-		view.setText("lat:" + lat + "\nlon" + lon);
-		view.invalidate();
+		getGPS.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {// getting location in button click
+											// then update display
+				LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+				List<String> providers = lm.getProviders(true);
+				Location l = null;
+				for (int i = providers.size() - 1; i >= 0; i--) {
+					l = lm.getLastKnownLocation(providers.get(i));
+					if (l != null)
+						break;
+				}
+				if (l != null) {
+					lat = l.getLatitude();
+					lon = l.getLongitude();
+				}
+				view.setText("lat:" + lat + "\nlon" + lon);
+				view.invalidate();
+			}
+		});
 
 	}
 
@@ -65,23 +85,6 @@ public class MainActivity extends Activity {
 	}
 
 	public void getGPS() {
-		LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		List<String> providers = lm.getProviders(true);
 
-		/*
-		 * Loop over the array backwards, and if you get an accurate location,
-		 * then break out the loop
-		 */
-		Location l = null;
-
-		for (int i = providers.size() - 1; i >= 0; i--) {
-			l = lm.getLastKnownLocation(providers.get(i));
-			if (l != null)
-				break;
-		}
-		if (l != null) {
-			lat = l.getLatitude();
-			lon = l.getLongitude();
-		}
 	}
 }
