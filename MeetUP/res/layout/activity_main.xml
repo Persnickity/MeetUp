@@ -8,25 +8,64 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
-    <Button
-        android:id="@+id/gpsButton"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:onClick=""
-        android:text="Button" />
+        android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/gpstemp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="17dp"
-        android:text="@string/hello_world"
-        android:textSize="40sp"
-        android:typeface="monospace" />
+        <TextView
+            android:id="@+id/gpstemp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="17dp"
+            android:text="@string/hello_world"
+            android:textSize="40sp"
+            android:typeface="monospace" />
+
+        <Button
+            android:id="@+id/gpsButton"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="update GPS" />
+
+        <Button
+            android:id="@+id/createEvent"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create A New Event" />
+
+        <Button
+            android:id="@+id/editEvent"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Edit Event" />
+
+        <Button
+            android:id="@+id/createGroup"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create A New Group" />
+
+        <Button
+            android:id="@+id/addToGroup"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Join A Group" />
+
+        <Button
+            android:id="@+id/CheckIn"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Check In To Event" />
+    </LinearLayout>
 
 </RelativeLayout>
