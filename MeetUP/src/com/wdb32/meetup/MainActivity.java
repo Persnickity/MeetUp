@@ -1,8 +1,9 @@
 package com.wdb32.meetup;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
-
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -12,22 +13,25 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.ListView;
 
 public class MainActivity extends Activity {
-	String rootCause = "Main Activity";
-	double lat, lon;
-	TextView view;
-	GroupJson groupJson = new GroupJson();
-	AccountJson accountJson = new AccountJson();
-	EventJson eventJson = new EventJson();
-	ArrayList<String> text = new ArrayList<String>();
-	ArrayList<Account> accounts = new ArrayList<Account>();
-	ArrayList<Event> events = new ArrayList<Event>();
-	ArrayList<Group> groups = new ArrayList<Group>();
-	Button updateGPSD, createEvent, editEvent, createGroup, addToGroup,
-			Checkin;
+	public String rootCause = "Main Activity";
+	public double lat, lon;
+	public ListView view;
+	public GroupJson groupJson = new GroupJson();
+	public AccountJson accountJson = new AccountJson();
+	public EventJson eventJson;
+	public ArrayList<String> text = new ArrayList<String>();
+	public ArrayList<Account> accounts = new ArrayList<Account>();
+	public ArrayList<Event> events = new ArrayList<Event>();
+	public ArrayList<Group> groups = new ArrayList<Group>();
+	public Button updateGPSD, createEvent, editEvent, createGroup, addToGroup,
+			checkin;
+	private ArrayAdapter<String> adapter;
+	String myPhoneNumber;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,16 +48,19 @@ public class MainActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
-
 		return true;
 	}
 
 	public void doThis() throws Exception {
 		TelephonyManager tMgr = (TelephonyManager) this
 				.getSystemService(Context.TELEPHONY_SERVICE);
-		String myPhoneNumber = tMgr.getLine1Number();
-		accountJson.execute(myPhoneNumber).get();
-		view = (TextView) findViewById(R.id.gpstemp);
+		myPhoneNumber = tMgr.getLine1Number();
+		accountJson.execute(myPhoneNumber).get();// check account
+		adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1, text);
+		view = (ListView) findViewById(R.id.list);
+		view.setAdapter(adapter);
+		view.invalidate();
 		linkButtons();
 	}
 
@@ -63,7 +70,7 @@ public class MainActivity extends Activity {
 		editEvent = (Button) findViewById(R.id.editEvent);
 		createGroup = (Button) findViewById(R.id.createGroup);
 		addToGroup = (Button) findViewById(R.id.addToGroup);
-
+		checkin = (Button) findViewById(R.id.CheckIn);
 		buttonsOnClickSet();
 	}
 
@@ -72,24 +79,49 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {// getting location in button click
 				updateGPS(); // then update display
-				view.setText("lat:" + lat + "\nlon" + lon);
-				view.invalidate();
+				text.clear();
+				text.add("lat:" + lat);
+				text.add("lon:" + lon);
+				adapter.notifyDataSetChanged();
 			}
 		});
 		createEvent.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				eventJson = new EventJson();
+				try {
+					// groupID,modnumber,date,time,lat,lon
+					events = eventJson.execute("CreateEvent").get();
+					text.clear();
+					for (int x = 0; x < events.size(); x++) {
+						text.add(events.get(x).toString());
+					}
+
+				} catch (Exception e) {
+					Log.i("Failure in create Event", e.toString());
+				}
 			}
 		});
 		editEvent.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				eventJson = new EventJson();
 			}
 		});
 		createGroup.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				try {
 
+					groups = groupJson.execute().get();
+					text.clear();
+					for (int x = 0; x < events.size(); x++) {
+						text.add(events.get(x).toString());
+					}
+
+				} catch (Exception e) {
+					Log.i("Failure in create Event", e.toString());
+				}
 			}
 		});
 		addToGroup.setOnClickListener(new View.OnClickListener() {
@@ -98,6 +130,32 @@ public class MainActivity extends Activity {
 
 			}
 		});
+		checkin.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				eventJson = new EventJson();
+				updateGPS();
+				// phone,eventid,date,time,lat,lon
+				Calendar calendar = Calendar.getInstance();
+
+				SimpleDateFormat dateFormat = new SimpleDateFormat(
+						"dd:MMM:yyyy");
+				String date = dateFormat.format(calendar.getTime());
+				SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+				String time = timeFormat.format(calendar.getTime());
+				eventJson.execute("checkIn", myPhoneNumber, "id", date, time,
+						lat + "", lon + "");
+			}
+		});
+	}
+
+	public void printToScreen(ArrayList<Object> arrayList) {
+		text.clear();
+		for (int x = 0; x < arrayList.size(); x++) {
+			text.add(arrayList.get(x).toString());
+		}
+
+		adapter.notifyDataSetChanged();
 	}
 
 	public double calculateMiles(double latitude, double longitude) {

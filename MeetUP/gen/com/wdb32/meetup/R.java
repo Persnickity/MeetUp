@@ -31,7 +31,7 @@ public final class R {
         public static final int createGroup=0x7f080004;
         public static final int editEvent=0x7f080003;
         public static final int gpsButton=0x7f080001;
-        public static final int gpstemp=0x7f080000;
+        public static final int list=0x7f080000;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;

@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class EventJson extends AsyncTask<String, Void, ArrayList<Event>> {
@@ -20,25 +21,72 @@ public class EventJson extends AsyncTask<String, Void, ArrayList<Event>> {
 	public static final String editEvent = "editEvent";
 	public static final String getEventsByID = "getEventsByID";
 	public static final String getAllEvents = "getAllEvents";
-
+	public static final String getData = "getData";
+	public static final String checkIn = "checkIn";
 	public static final ArrayList<Event> events = new ArrayList<Event>();
 
-	protected ArrayList<Event> doInBackground(String... params) {
-
+	protected ArrayList<Event> doInBackground(String... args) {
+		if (args[0].equals("getAllEvents")) {// get All
+			try {
+				getAll();
+			} catch (Exception e) {
+				Log.i("get All Events Failed", e.toString());
+			}
+		} else if (args[0].equals("editEvents")) {// edit
+			try {
+				editEvent(args[1], args[2], args[3], args[4], args[5], args[6]);
+			} catch (Exception e) {
+				Log.i("Edit Event failed", e.toString());
+			}
+		} else if (args[0].equals("createEvent")) {// create
+			try {
+				create(args[1], args[2], args[3], args[4], args[5], args[6]);
+			} catch (Exception e) {
+				Log.i("Edit Event failed", e.toString());
+			}
+		} else {
+			if (args[0].equals("checkIn")) {// create
+				try {
+					checkIn(args[1], args[2], args[3], args[4], args[5],
+							args[6]);
+				} catch (Exception e) {
+					Log.i("Check In failed", e.toString());
+				}
+			} else {
+				return null;
+			}
+		}
 		return events;
 	}
 
-	private static void getAllEvents() throws Exception {
-
+	private static void checkIn(String number, String id, String date,
+			String time, String lat, String lon) throws Exception {
 		StringBuffer response = new StringBuffer();
 		String inputLine;
 		BufferedReader in;
 		URL url;
 		HttpURLConnection request;
 
-		url = new URL(server + "/" + getAllEvents);
+		url = new URL(server + "/" + checkIn + "/" + number + "/" + id + "/"
+				+ date + "/" + time + "/" + lat + "/" + lon);
 		request = (HttpURLConnection) url.openConnection();
-		System.out.println(request.toString());
+		in = new BufferedReader(new InputStreamReader(request.getInputStream()));
+		while ((inputLine = in.readLine()) != null) {
+			response.append(inputLine);
+		}
+		in.close();
+	}
+
+	private void editEvent(String id, String modNumber, String date,
+			String time, String lat, String lon) throws Exception {
+		StringBuffer response = new StringBuffer();
+		String inputLine;
+		BufferedReader in;
+		URL url;
+		HttpURLConnection request;
+		url = new URL(server + "/" + editEvent + "/" + id + "/" + modNumber
+				+ "/" + date + "/" + time + "/" + lat + "/" + lon);
+		request = (HttpURLConnection) url.openConnection();
 		in = new BufferedReader(new InputStreamReader(request.getInputStream()));
 		while ((inputLine = in.readLine()) != null) {
 			response.append(inputLine);
@@ -46,94 +94,53 @@ public class EventJson extends AsyncTask<String, Void, ArrayList<Event>> {
 		in.close();
 		JsonParser jp = new JsonParser();
 		JsonElement root = jp.parse(response.toString());
-		JsonArray array = root.getAsJsonArray();
+		System.out.println(root.toString());
+	}
+
+	private static void create(String id, String modNumber, String date,
+			String time, String lat, String lon) throws Exception {
+		StringBuffer response = new StringBuffer();
+		String inputLine;
+		BufferedReader in;
+		URL url;
+		HttpURLConnection request;
+
+		url = new URL(server + "/" + createEvent + "/" + id + "/" + modNumber
+				+ "/" + date + "/" + time + "/" + lat + "/" + lon);
+		request = (HttpURLConnection) url.openConnection();
+		in = new BufferedReader(new InputStreamReader(request.getInputStream()));
+		while ((inputLine = in.readLine()) != null) {
+			response.append(inputLine);
+		}
+		in.close();
+		JsonParser jp = new JsonParser();
+		JsonElement root = jp.parse(response.toString());
+		System.out.println(root.toString());
+	}
+
+	public static void getAll() throws Exception {
+		StringBuffer response = new StringBuffer();
+		String inputLine;
+		BufferedReader in;
+		URL url;
+		HttpURLConnection request;
+
+		url = new URL(server + "/" + getData);
+		request = (HttpURLConnection) url.openConnection();
+		in = new BufferedReader(new InputStreamReader(request.getInputStream()));
+		while ((inputLine = in.readLine()) != null) {
+			response.append(inputLine);
+		}
+
+		in.close();
+		JsonParser jp = new JsonParser();
+		JsonElement root = jp.parse(response.toString());
+		JsonArray array = root.getAsJsonObject().get("Events").getAsJsonArray();
 		for (int x = 0; x < array.size(); x++) {
-			events.add(new Event(array.get(x).getAsJsonObject()));
-			System.out.println(events.get(x));
+			events.add(new Event(array.get(0).getAsJsonObject()));
 		}
-		System.out.println(root.toString());
-	}
 
-	private static void getEventsByID(String id) throws Exception {
-		StringBuffer response = new StringBuffer();
-		String inputLine;
-		BufferedReader in;
-		URL url;
-		HttpURLConnection request;
-
-		url = new URL(server + "/" + createEvent + "/" + id);
-		request = (HttpURLConnection) url.openConnection();
-		in = new BufferedReader(new InputStreamReader(request.getInputStream()));
-		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine);
-		}
-		in.close();
-		JsonParser jp = new JsonParser();
-		JsonElement root = jp.parse(response.toString());
 		System.out.println(root.toString());
 
 	}
-
-	private static void editEvenzt(int id, String modNumber, String date,
-			String time, double lat, double lon) throws Exception {
-		StringBuffer response = new StringBuffer();
-		String inputLine;
-		BufferedReader in;
-		URL url;
-		HttpURLConnection request;
-
-		url = new URL(server + "/" + createEvent + "/" + id + "/" + modNumber
-				+ "/" + date + "/" + time + "/" + lat + "/" + lon);
-		request = (HttpURLConnection) url.openConnection();
-		in = new BufferedReader(new InputStreamReader(request.getInputStream()));
-		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine);
-		}
-		in.close();
-		JsonParser jp = new JsonParser();
-		JsonElement root = jp.parse(response.toString());
-		System.out.println(root.toString());
-
-	}
-
-	private static void createEvent(int id, String modNumber, String date,
-			String time, double lat, double lon) throws Exception {
-		StringBuffer response = new StringBuffer();
-		String inputLine;
-		BufferedReader in;
-		URL url;
-		HttpURLConnection request;
-
-		url = new URL(server + "/" + createEvent + "/" + id + "/" + modNumber
-				+ "/" + date + "/" + time + "/" + lat + "/" + lon);
-		request = (HttpURLConnection) url.openConnection();
-		in = new BufferedReader(new InputStreamReader(request.getInputStream()));
-		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine);
-		}
-		in.close();
-		JsonParser jp = new JsonParser();
-		JsonElement root = jp.parse(response.toString());
-		System.out.println(root.toString());
-	}
-
-	public static void getInfo() throws Exception {
-		StringBuffer response = new StringBuffer();
-		String inputLine;
-		BufferedReader in;
-		URL url;
-		HttpURLConnection request;
-
-		url = new URL(server + "/" + info);
-		request = (HttpURLConnection) url.openConnection();
-		in = new BufferedReader(new InputStreamReader(request.getInputStream()));
-		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine);
-		}
-		in.close();
-		JsonParser jp = new JsonParser();
-		JsonElement root = jp.parse(response.toString());
-		System.out.println(root.toString());
-	}
-
 }
