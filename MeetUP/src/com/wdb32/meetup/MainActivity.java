@@ -1,5 +1,7 @@
 package com.wdb32.meetup;
 
+import java.util.List;
+
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -7,12 +9,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.Menu;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	String rootCause = "Main Activity";
 	double lat, lon;
 	TextView view;
+	Button button;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +35,8 @@ public class MainActivity extends Activity {
 
 	public void doThis() {
 		getGPS();
-		Log.i("TESTING", lat + "," + lon);
-		view = new TextView(this);
-		view.setId(R.id.gpstemp);
-		view.setText(lat + "," + lon);
+		view = (TextView) findViewById(R.id.gpstemp);
+		view.setText("lat:" + lat + "\nlon" + lon);
 		view.invalidate();
 
 	}
@@ -63,8 +65,23 @@ public class MainActivity extends Activity {
 	}
 
 	public void getGPS() {
-		// fuck GPS for now this are here just so i have numbers to work with
-		lat = 50;
-		lon = 100;
+		LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		List<String> providers = lm.getProviders(true);
+
+		/*
+		 * Loop over the array backwards, and if you get an accurate location,
+		 * then break out the loop
+		 */
+		Location l = null;
+
+		for (int i = providers.size() - 1; i >= 0; i--) {
+			l = lm.getLastKnownLocation(providers.get(i));
+			if (l != null)
+				break;
+		}
+		if (l != null) {
+			lat = l.getLatitude();
+			lon = l.getLongitude();
+		}
 	}
 }
