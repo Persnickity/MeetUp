@@ -18,7 +18,6 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		Log.i("onCreate", "Bundle");
 		doThis();
 	}
 
@@ -26,7 +25,6 @@ public class MainActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
-		Log.i("onCreate", "Menu");
 		doThis();
 		return true;
 	}
@@ -38,6 +36,7 @@ public class MainActivity extends Activity {
 		view.setId(R.id.gpstemp);
 		view.setText(lat + "," + lon);
 		view.invalidate();
+
 	}
 
 	public double calculateMiles(double latitude, double longitude) {
@@ -64,19 +63,8 @@ public class MainActivity extends Activity {
 	}
 
 	public void getGPS() {
-		// http://developer.android.com/reference/android/location/LocationManager.html
-		try {
-			Log.i(rootCause, "Getting GPS");
-
-			LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-			Location location = lm
-					.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-			Log.i(rootCause, "location=" + location.toString());
-			lon = location.getLongitude();
-			lat = location.getLatitude();
-			Log.i(rootCause, lat + "," + lon);
-		} catch (Exception e) {
-			Log.i(rootCause, "ERROR IS=" + e.toString());
-		}
+		// fuck GPS for now this are here just so i have numbers to work with
+		lat = 50;
+		lon = 100;
 	}
 }
