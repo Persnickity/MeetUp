@@ -1,5 +1,6 @@
 package com.wdb32.meetup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.location.Location;
@@ -18,6 +19,13 @@ public class MainActivity extends Activity {
 	String rootCause = "Main Activity";
 	double lat, lon;
 	TextView view;
+	GroupJson groupJson = new GroupJson();
+	AccountJson accountJson = new AccountJson();
+	EventJson eventJson = new EventJson();
+	ArrayList<String> text = new ArrayList<String>();
+	ArrayList<Account> accounts = new ArrayList<Account>();
+	ArrayList<Event> events = new ArrayList<Event>();
+	ArrayList<Group> groups = new ArrayList<Group>();
 	Button updateGPSD, createEvent, editEvent, createGroup, addToGroup,
 			Checkin;
 
@@ -25,22 +33,26 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		doThis();
+		try {
+			doThis();
+		} catch (Exception e) {
+			Log.i(rootCause, e.toString());
+		}
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
-		doThis();
+
 		return true;
 	}
 
-	public void doThis() {
+	public void doThis() throws Exception {
 		TelephonyManager tMgr = (TelephonyManager) this
 				.getSystemService(Context.TELEPHONY_SERVICE);
 		String myPhoneNumber = tMgr.getLine1Number();
-		Log.i(rootCause, myPhoneNumber);
+		accountJson.execute(myPhoneNumber).get();
 		view = (TextView) findViewById(R.id.gpstemp);
 		linkButtons();
 	}
