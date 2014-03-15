@@ -138,14 +138,18 @@ public class MainActivity extends Activity {
 				// phone,eventid,date,time,lat,lon
 				Calendar calendar = Calendar.getInstance();
 
-				SimpleDateFormat dateFormat = new SimpleDateFormat(
-						"dd:MMM:yyyy");
+				SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMMyyyy");
 				String date = dateFormat.format(calendar.getTime());
-				SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+				SimpleDateFormat timeFormat = new SimpleDateFormat("HHmmss");
 				String time = timeFormat.format(calendar.getTime());
 				eventJson.execute("checkIn", myPhoneNumber, "id", date, time,
 						lat + "", lon + "");
+				text.clear();
+				text.add("Checked In for Event");
+
+				adapter.notifyDataSetChanged();
 			}
+
 		});
 	}
 
