@@ -93,9 +93,7 @@ public class MainActivity extends Activity {
 					// groupID,modnumber,date,time,lat,lon
 					events = eventJson.execute("CreateEvent").get();
 					text.clear();
-					for (int x = 0; x < events.size(); x++) {
-						text.add(events.get(x).toString());
-					}
+					text.add(events.toString());
 					adapter.notifyDataSetChanged();
 
 				} catch (Exception e) {
@@ -105,8 +103,13 @@ public class MainActivity extends Activity {
 		});
 		editEvent.setOnClickListener(new View.OnClickListener() {
 			@Override
+			//
 			public void onClick(View v) {
-				eventJson = new EventJson();
+				try {
+					eventJson = new EventJson();
+				} catch (Exception e) {
+					Log.i("Failure in edit Event", e.toString());
+				}
 			}
 		});
 		createGroup.setOnClickListener(new View.OnClickListener() {
@@ -128,7 +131,7 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				groupJson = new GroupJson();
 				// phonenumber,GroupID
-				groupJson.execute("addToGroup", myPhoneNumber, "asdf");
+				groupJson.execute("addToGroup", myPhoneNumber, "1");
 
 			}
 		});
@@ -140,9 +143,10 @@ public class MainActivity extends Activity {
 				// phone,eventid,date,time,lat,lon
 				Calendar calendar = Calendar.getInstance();
 
-				SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMMyyyy");
+				SimpleDateFormat dateFormat = new SimpleDateFormat(
+						"dd:MMM:yyyy");
 				String date = dateFormat.format(calendar.getTime());
-				SimpleDateFormat timeFormat = new SimpleDateFormat("HHmmss");
+				SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 				String time = timeFormat.format(calendar.getTime());
 				eventJson.execute("checkIn", myPhoneNumber, "id", date, time,
 						lat + "", lon + "");
