@@ -40,7 +40,7 @@ public class EventJson extends AsyncTask<String, Void, ArrayList<Event>> {
 			}
 		} else if (args[0].equals("createEvent")) {// create
 			try {
-				create(args[1], args[2], args[3], args[4], args[5], args[6]);
+				create(args[1], args[2], args[3], args[4]);
 			} catch (Exception e) {
 				Log.i("Edit Event failed", e.toString());
 			}
@@ -98,7 +98,7 @@ public class EventJson extends AsyncTask<String, Void, ArrayList<Event>> {
 	}
 
 	private static void create(String id, String modNumber, String date,
-			String time, String lat, String lon) throws Exception {
+			String time) throws Exception {
 		StringBuffer response = new StringBuffer();
 		String inputLine;
 		BufferedReader in;
@@ -106,7 +106,7 @@ public class EventJson extends AsyncTask<String, Void, ArrayList<Event>> {
 		HttpURLConnection request;
 
 		url = new URL(server + "/" + createEvent + "/" + id + "/" + modNumber
-				+ "/" + date + "/" + time + "/" + lat + "/" + lon);
+				+ "/" + date + "/" + time);
 		request = (HttpURLConnection) url.openConnection();
 		in = new BufferedReader(new InputStreamReader(request.getInputStream()));
 		while ((inputLine = in.readLine()) != null) {

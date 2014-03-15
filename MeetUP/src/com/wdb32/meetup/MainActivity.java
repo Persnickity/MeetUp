@@ -4,11 +4,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
@@ -86,12 +89,22 @@ public class MainActivity extends Activity {
 			}
 		});
 		createEvent.setOnClickListener(new View.OnClickListener() {
-			@Override
+
 			public void onClick(View v) {
-				eventJson = new EventJson();
 				try {
+					Intent createInfo = new Intent(MainActivity.this,
+							CreateEventInfo.class);
+					startActivity(createInfo);
+					Bundle bundle = createInfo.getExtras();
+
+					String date = bundle.getString("date");
+					String time = bundle.getString("time");
+					String id = bundle.getString("id");
+
+					eventJson = new EventJson();
 					// groupID,modnumber,date,time,lat,lon
-					events = eventJson.execute("CreateEvent").get();
+					events = eventJson.execute("CreateEvent", id,
+							myPhoneNumber, date, time).get();
 					text.clear();
 					text.add(events.toString());
 					adapter.notifyDataSetChanged();

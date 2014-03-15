@@ -3,12 +3,9 @@ package com.wdb32.meetup;
 import com.google.gson.JsonObject;
 
 public class Event {
-	double lat, lon;
 	String name, id, modNum, date, time;
 
 	public Event() {
-		lat = 0.0;
-		lon = 0.0;
 		name = null;
 		id = null;
 		modNum = null;
@@ -19,8 +16,6 @@ public class Event {
 	public Event(JsonObject object) {
 
 		name = object.get("name").getAsString();
-		lat = object.get("Latitude").getAsDouble();
-		lon = object.get("longitude").getAsDouble();
 		id = object.get("id").getAsString();
 		date = object.get("date").getAsString();
 		time = object.get("time").getAsString();
@@ -58,21 +53,6 @@ public class Event {
 		this.time = time;
 	}
 
-	public double getLat() {
-		return lat;
-	}
-
-	public void setLat(double lat) {
-		this.lat = lat;
-	}
-
-	public double getLon() {
-		return lon;
-	}
-
-	public void setLon(double lon) {
-		this.lon = lon;
-	}
 
 	public String getName() {
 		return name;
@@ -83,7 +63,7 @@ public class Event {
 	}
 
 	public String toString() {
-		return name + "\n" + id + "\n" + modNum + "\n" + date + "\n" + time
-				+ "\n" + lat + "\n" + lon;
+		return name + "\n" + id + "\n" + modNum + "\n" + date + "\n" + time;
+				
 	}
 }
