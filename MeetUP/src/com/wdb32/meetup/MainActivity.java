@@ -96,6 +96,7 @@ public class MainActivity extends Activity {
 					for (int x = 0; x < events.size(); x++) {
 						text.add(events.get(x).toString());
 					}
+					adapter.notifyDataSetChanged();
 
 				} catch (Exception e) {
 					Log.i("Failure in create Event", e.toString());
@@ -111,22 +112,23 @@ public class MainActivity extends Activity {
 		createGroup.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+
 				try {
-
-					groups = groupJson.execute().get();
+					groups = groupJson.execute("createGroup").get();
 					text.clear();
-					for (int x = 0; x < events.size(); x++) {
-						text.add(events.get(x).toString());
-					}
-
+					text.add("Group Created");
+					adapter.notifyDataSetChanged();
 				} catch (Exception e) {
-					Log.i("Failure in create Event", e.toString());
+					Log.i("Failure in create Group", e.toString());
 				}
 			}
 		});
 		addToGroup.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				groupJson = new GroupJson();
+				// phonenumber,GroupID
+				groupJson.execute("addToGroup", myPhoneNumber, "asdf");
 
 			}
 		});
@@ -153,10 +155,10 @@ public class MainActivity extends Activity {
 		});
 	}
 
-	public void printToScreen(ArrayList<Object> arrayList) {
+	public void printToScreen(Object[] arrayList) {
 		text.clear();
-		for (int x = 0; x < arrayList.size(); x++) {
-			text.add(arrayList.get(x).toString());
+		for (int x = 0; x < arrayList.length; x++) {
+			text.add(arrayList[x].toString());
 		}
 
 		adapter.notifyDataSetChanged();
