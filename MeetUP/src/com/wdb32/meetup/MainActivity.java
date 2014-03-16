@@ -95,6 +95,7 @@ public class MainActivity extends Activity {
 					Intent createInfo = new Intent(MainActivity.this,
 							CreateEventInfo.class);
 					startActivity(createInfo);
+					Log.i("Main Activity","");
 					Bundle bundle = createInfo.getExtras();
 
 					String date = bundle.getString("date");
