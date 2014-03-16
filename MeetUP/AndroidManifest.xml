@@ -35,6 +35,18 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.wdb32.meetup.MainActivity" />
         </activity>
+        <activity
+            android:name="com.wdb32.meetup.EditEventInfo"
+            android:label="@string/title_activity_edit_event_info" >
+        </activity>
+        <activity
+            android:name="com.wdb32.meetup.AddToGroup"
+            android:label="@string/title_activity_add_to_group"
+            android:parentActivityName="com.wdb32.meetup.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.wdb32.meetup.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -87,11 +87,6 @@ public class GroupJson extends AsyncTask<String, Void, ArrayList<Group>> {
 		while ((inputLine = in.readLine()) != null) {
 			response.append(inputLine);
 		}
-		in.close();
-		JsonParser jp = new JsonParser();
-		JsonElement root = jp.parse(response.toString());
-		System.out.println(root.toString());
-
 	}
 
 	private void create() throws Exception {

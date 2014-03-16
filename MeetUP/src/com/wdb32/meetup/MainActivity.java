@@ -55,9 +55,7 @@ public class MainActivity extends Activity {
 	}
 
 	public void doThis() throws Exception {
-		TelephonyManager tMgr = (TelephonyManager) this
-				.getSystemService(Context.TELEPHONY_SERVICE);
-		myPhoneNumber = tMgr.getLine1Number();
+		getPhoneNumber();
 		accountJson.execute(myPhoneNumber).get();// check account
 		adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, text);
@@ -65,6 +63,12 @@ public class MainActivity extends Activity {
 		view.setAdapter(adapter);
 		view.invalidate();
 		linkButtons();
+	}
+
+	public void getPhoneNumber() {
+		TelephonyManager tMgr = (TelephonyManager) this
+				.getSystemService(Context.TELEPHONY_SERVICE);
+		myPhoneNumber = tMgr.getLine1Number();
 	}
 
 	public void linkButtons() {
@@ -75,6 +79,61 @@ public class MainActivity extends Activity {
 		addToGroup = (Button) findViewById(R.id.addToGroup);
 		checkin = (Button) findViewById(R.id.CheckIn);
 		buttonsOnClickSet();
+	}
+
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		try {
+			doThis();
+		} catch (Exception e) {
+		}
+		eventJson = new EventJson();
+		if (requestCode == 1) {// createEvent
+			if (resultCode == RESULT_OK) {
+				try {
+					String date = data.getStringExtra("date");
+					String time = data.getStringExtra("time");
+					String id = data.getStringExtra("id");
+					eventJson = new EventJson();
+					// groupID,modnumber,date,time,lat,lon
+					events = eventJson.execute("CreateEvent", id,
+							myPhoneNumber, date, time).get();
+				} catch (Exception e) {
+					Log.i("Failed on Return from Create Event Screen",
+							e.toString());
+				}
+			}
+		}
+		if (requestCode == 2) {// edit Event
+			if (resultCode == RESULT_OK) {
+				try {
+					String date = data.getStringExtra("date");
+					String time = data.getStringExtra("time");
+					String id = data.getStringExtra("id");
+					eventJson = new EventJson();
+					// EventID,modnumber,date,time,lat,lon
+					events = eventJson.execute("EditEvent", id, myPhoneNumber,
+							date, time).get();
+				} catch (Exception e) {
+					Log.i("Failed on Return from Edit Event Screen",
+							e.toString());
+				}
+			}
+		}
+		if (requestCode == 3) {// add To Group
+			if (resultCode == RESULT_OK) {
+				try {
+					groupJson = new GroupJson();
+					String id = data.getStringExtra("id");
+					eventJson = new EventJson();
+					// myPhoneNumber,GroupID
+					events = eventJson.execute("addToGroup", myPhoneNumber, id)
+							.get();
+				} catch (Exception e) {
+					Log.i("Failed on Return from addToGroup Screen",
+							e.toString());
+				}
+			}
+		}
 	}
 
 	private void buttonsOnClickSet() {
@@ -89,41 +148,19 @@ public class MainActivity extends Activity {
 			}
 		});
 		createEvent.setOnClickListener(new View.OnClickListener() {
-
 			public void onClick(View v) {
-				try {
-					Intent createInfo = new Intent(MainActivity.this,
-							CreateEventInfo.class);
-					startActivity(createInfo);
-					Log.i("Main Activity","");
-					Bundle bundle = createInfo.getExtras();
-
-					String date = bundle.getString("date");
-					String time = bundle.getString("time");
-					String id = bundle.getString("id");
-
-					eventJson = new EventJson();
-					// groupID,modnumber,date,time,lat,lon
-					events = eventJson.execute("CreateEvent", id,
-							myPhoneNumber, date, time).get();
-					text.clear();
-					text.add(events.toString());
-					adapter.notifyDataSetChanged();
-
-				} catch (Exception e) {
-					Log.i("Failure in create Event", e.toString());
-				}
+				Intent createInfo = new Intent(MainActivity.this,
+						CreateEventInfo.class);
+				startActivityForResult(createInfo, 1);
 			}
 		});
 		editEvent.setOnClickListener(new View.OnClickListener() {
 			@Override
 			//
 			public void onClick(View v) {
-				try {
-					eventJson = new EventJson();
-				} catch (Exception e) {
-					Log.i("Failure in edit Event", e.toString());
-				}
+				Intent createInfo = new Intent(MainActivity.this,
+						CreateEventInfo.class);
+				startActivityForResult(createInfo, 2);
 			}
 		});
 		createGroup.setOnClickListener(new View.OnClickListener() {
@@ -143,10 +180,9 @@ public class MainActivity extends Activity {
 		addToGroup.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				groupJson = new GroupJson();
-				// phonenumber,GroupID
-				groupJson.execute("addToGroup", myPhoneNumber, "1");
-
+				Intent createInfo = new Intent(MainActivity.this,
+						AddToGroup.class);
+				 startActivityForResult(createInfo, 3);
 			}
 		});
 		checkin.setOnClickListener(new View.OnClickListener() {

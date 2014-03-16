@@ -32,20 +32,20 @@ public class EventJson extends AsyncTask<String, Void, ArrayList<Event>> {
 			} catch (Exception e) {
 				Log.i("get All Events Failed", e.toString());
 			}
-		} else if (args[0].equals("editEvents")) {// edit
+		} else if (args[0].equals("EditEvent")) {// edit
 			try {
-				editEvent(args[1], args[2], args[3], args[4], args[5], args[6]);
+				editEvent(args[1], args[2], args[3], args[4]);
 			} catch (Exception e) {
 				Log.i("Edit Event failed", e.toString());
 			}
-		} else if (args[0].equals("createEvent")) {// create
+		} else if (args[0].equals("CreateEvent")) {// create
 			try {
 				create(args[1], args[2], args[3], args[4]);
 			} catch (Exception e) {
 				Log.i("Edit Event failed", e.toString());
 			}
 		} else {
-			if (args[0].equals("checkIn")) {// create
+			if (args[0].equals("CheckIn")) {// create
 				try {
 					checkIn(args[1], args[2], args[3], args[4], args[5],
 							args[6]);
@@ -77,24 +77,21 @@ public class EventJson extends AsyncTask<String, Void, ArrayList<Event>> {
 		in.close();
 	}
 
-	private void editEvent(String id, String modNumber, String date,
-			String time, String lat, String lon) throws Exception {
+	private void editEvent(String id, String modNumber, String date, String time)
+			throws Exception {
 		StringBuffer response = new StringBuffer();
 		String inputLine;
 		BufferedReader in;
 		URL url;
 		HttpURLConnection request;
 		url = new URL(server + "/" + editEvent + "/" + id + "/" + modNumber
-				+ "/" + date + "/" + time + "/" + lat + "/" + lon);
+				+ "/" + date + "/" + time);
 		request = (HttpURLConnection) url.openConnection();
 		in = new BufferedReader(new InputStreamReader(request.getInputStream()));
 		while ((inputLine = in.readLine()) != null) {
 			response.append(inputLine);
 		}
 		in.close();
-		JsonParser jp = new JsonParser();
-		JsonElement root = jp.parse(response.toString());
-		System.out.println(root.toString());
 	}
 
 	private static void create(String id, String modNumber, String date,
@@ -113,9 +110,6 @@ public class EventJson extends AsyncTask<String, Void, ArrayList<Event>> {
 			response.append(inputLine);
 		}
 		in.close();
-		JsonParser jp = new JsonParser();
-		JsonElement root = jp.parse(response.toString());
-		System.out.println(root.toString());
 	}
 
 	public static void getAll() throws Exception {
