@@ -11,9 +11,11 @@ public class Account {
 	}
 
 	public Account(JsonObject object) {
+	try{
 		name = object.get("name").getAsString();
 		num = object.get("phoneNumber").getAsString();
-
+	}
+	catch(Exception e){return;}
 	}
 
 	public String getName() {

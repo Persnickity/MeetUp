@@ -87,6 +87,7 @@ public class GroupJson extends AsyncTask<String, Void, ArrayList<Group>> {
 		while ((inputLine = in.readLine()) != null) {
 			response.append(inputLine);
 		}
+		in.close();
 	}
 
 	private void create() throws Exception {

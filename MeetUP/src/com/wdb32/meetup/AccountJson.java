@@ -59,6 +59,11 @@ public class AccountJson extends AsyncTask<String, Void, ArrayList<Account>> {
 		in.close();
 		JsonParser jp = new JsonParser();
 		JsonElement root = jp.parse(response.toString());
+		try {
+			accounts.add(new Account(root.getAsJsonObject()));
+		} catch (Exception e) {
+			return;
+		}
 		System.out.println(root.toString());
 	}
 

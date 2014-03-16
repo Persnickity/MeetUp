@@ -4,8 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.locks.Lock;
-
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -56,6 +54,7 @@ public class MainActivity extends Activity {
 
 	public void doThis() throws Exception {
 		getPhoneNumber();
+
 		accountJson.execute(myPhoneNumber).get();// check account
 		adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, text);
@@ -81,6 +80,7 @@ public class MainActivity extends Activity {
 		buttonsOnClickSet();
 	}
 
+	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		try {
 			doThis();
@@ -148,6 +148,7 @@ public class MainActivity extends Activity {
 			}
 		});
 		createEvent.setOnClickListener(new View.OnClickListener() {
+			@Override
 			public void onClick(View v) {
 				Intent createInfo = new Intent(MainActivity.this,
 						CreateEventInfo.class);
@@ -182,7 +183,7 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				Intent createInfo = new Intent(MainActivity.this,
 						AddToGroup.class);
-				 startActivityForResult(createInfo, 3);
+				startActivityForResult(createInfo, 3);
 			}
 		});
 		checkin.setOnClickListener(new View.OnClickListener() {
