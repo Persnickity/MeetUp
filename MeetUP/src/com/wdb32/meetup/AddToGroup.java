@@ -15,15 +15,12 @@ public class AddToGroup extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.i("Adding to Group Screen", "Starting");
 		setContentView(R.layout.activity_add_to_group);
 		idfield = (EditText) findViewById(R.id.idfield);
 		button = (Button) findViewById(R.id.button);
-		Log.i("Adding to Group Screen", "Declared");
 		button.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Log.i("Adding to Group Screen", "Clicked");
 				Intent intent = new Intent();
 				intent.putExtra("id", idfield.getText().toString());
 				setResult(RESULT_OK, intent);

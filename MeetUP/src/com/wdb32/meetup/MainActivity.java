@@ -126,7 +126,7 @@ public class MainActivity extends Activity {
 					String id = data.getStringExtra("id");
 					eventJson = new EventJson();
 					// myPhoneNumber,GroupID
-					events = eventJson.execute("addToGroup", myPhoneNumber, id)
+					groups = groupJson.execute("addToGroup", myPhoneNumber, id)
 							.get();
 				} catch (Exception e) {
 					Log.i("Failed on Return from addToGroup Screen",
