@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	public String rootCause = "Main Activity";
@@ -54,14 +56,24 @@ public class MainActivity extends Activity {
 
 	public void doThis() throws Exception {
 		getPhoneNumber();
-
-		accountJson.execute(myPhoneNumber).get();// check account
 		adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, text);
 		view = (ListView) findViewById(R.id.list);
 		view.setAdapter(adapter);
 		view.invalidate();
 		linkButtons();
+		try {
+			getPhoneNumber();
+			accounts.clear();
+			accountJson = new AccountJson();
+			accounts = accountJson.execute("CheckMemberShip", myPhoneNumber)
+					.get();
+			Log.i("Member Is", accounts.get(0).toString());
+		} catch (Exception e) {
+			Intent createInfo = new Intent(MainActivity.this, GetName.class);
+			startActivityForResult(createInfo, 4);
+		}
+
 	}
 
 	public void getPhoneNumber() {
@@ -82,21 +94,23 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		try {
-			doThis();
-		} catch (Exception e) {
-		}
+		Log.i("Back from", requestCode + "");
 		eventJson = new EventJson();
+		accountJson = new AccountJson();
+		groupJson = new GroupJson();
+		getPhoneNumber();
 		if (requestCode == 1) {// createEvent
 			if (resultCode == RESULT_OK) {
 				try {
 					String date = data.getStringExtra("date");
 					String time = data.getStringExtra("time");
 					String id = data.getStringExtra("id");
-					eventJson = new EventJson();
 					// groupID,modnumber,date,time,lat,lon
 					events = eventJson.execute("CreateEvent", id,
 							myPhoneNumber, date, time).get();
+					Toast.makeText(getApplicationContext(),
+							"Event Created id= " + id, Toast.LENGTH_LONG)
+							.show();
 				} catch (Exception e) {
 					Log.i("Failed on Return from Create Event Screen",
 							e.toString());
@@ -109,10 +123,12 @@ public class MainActivity extends Activity {
 					String date = data.getStringExtra("date");
 					String time = data.getStringExtra("time");
 					String id = data.getStringExtra("id");
-					eventJson = new EventJson();
 					// EventID,modnumber,date,time,lat,lon
 					events = eventJson.execute("EditEvent", id, myPhoneNumber,
 							date, time).get();
+					Toast.makeText(getApplicationContext(),
+							"You Have Just Edited Event " + id,
+							Toast.LENGTH_LONG).show();
 				} catch (Exception e) {
 					Log.i("Failed on Return from Edit Event Screen",
 							e.toString());
@@ -122,15 +138,30 @@ public class MainActivity extends Activity {
 		if (requestCode == 3) {// add To Group
 			if (resultCode == RESULT_OK) {
 				try {
-					groupJson = new GroupJson();
 					String id = data.getStringExtra("id");
-					eventJson = new EventJson();
 					// myPhoneNumber,GroupID
 					groups = groupJson.execute("addToGroup", myPhoneNumber, id)
 							.get();
+					Toast.makeText(getApplicationContext(),
+							"You have been added to group " + id,
+							Toast.LENGTH_LONG).show();
 				} catch (Exception e) {
 					Log.i("Failed on Return from addToGroup Screen",
 							e.toString());
+				}
+			}
+		}
+		if (requestCode == 4) {// new Account
+			if (resultCode == RESULT_OK) {
+				try {
+					String name = data.getStringExtra("name");
+					accountJson.execute("createAccount", name, myPhoneNumber);
+
+					Toast.makeText(getApplicationContext(),
+							"Thank you " + name + " for joining MeetUp!",
+							Toast.LENGTH_LONG).show();
+				} catch (Exception e) {
+					Log.i("Failed on Return from Get Name Screen", e.toString());
 				}
 			}
 		}

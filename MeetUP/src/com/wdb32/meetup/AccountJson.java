@@ -36,10 +36,26 @@ public class AccountJson extends AsyncTask<String, Void, ArrayList<Account>> {
 			} catch (Exception e) {
 				Log.i("CreateAccount failed", e.toString());
 			}
-		} else {
+		} else if (args[0].equals("CheckMemberShip")) {// check
+			try {
+				checkMembership(args[1]);
+			} catch (Exception e) {
+				Log.i("Check Account failed", e.toString());
+			}
 			return null;
 		}
 		return accounts;
+	}
+
+	private void checkMembership(String number) {
+		accounts.clear();
+		for (int x = 0; x < accounts.size(); x++) {
+			if (accounts.get(x).getNum().equals(number)) {
+				return;
+			}
+		}
+		accounts.clear();
+		return;
 	}
 
 	public static void createAccount(String name, String number)
@@ -64,7 +80,6 @@ public class AccountJson extends AsyncTask<String, Void, ArrayList<Account>> {
 		} catch (Exception e) {
 			return;
 		}
-		System.out.println(root.toString());
 	}
 
 	public static void getAll() throws Exception {
@@ -88,9 +103,5 @@ public class AccountJson extends AsyncTask<String, Void, ArrayList<Account>> {
 		for (int x = 0; x < array.size(); x++) {
 			accounts.add(new Account(array.get(0).getAsJsonObject()));
 		}
-
-		System.out.println(root.toString());
-
 	}
-
 }

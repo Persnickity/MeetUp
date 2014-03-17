@@ -47,6 +47,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.wdb32.meetup.MainActivity" />
         </activity>
+        <activity
+            android:name="com.wdb32.meetup.GetName"
+            android:label="@string/title_activity_get_name"
+            android:parentActivityName="com.wdb32.meetup.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.wdb32.meetup.GetName" />
+        </activity>
     </application>
 
 </manifest>
