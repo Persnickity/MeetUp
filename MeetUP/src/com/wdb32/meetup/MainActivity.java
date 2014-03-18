@@ -23,17 +23,14 @@ import android.widget.Toast;
 public class MainActivity extends Activity {
 	public String rootCause = "Main Activity";
 	public double lat, lon;
-	public ListView view;
 	public GroupJson groupJson = new GroupJson();
 	public AccountJson accountJson = new AccountJson();
 	public EventJson eventJson;
-	public ArrayList<String> text = new ArrayList<String>();
 	public ArrayList<Account> accounts = new ArrayList<Account>();
 	public ArrayList<Event> events = new ArrayList<Event>();
 	public ArrayList<Group> groups = new ArrayList<Group>();
 	public Button updateGPSD, createEvent, editEvent, createGroup, addToGroup,
 			checkin;
-	private ArrayAdapter<String> adapter;
 	String myPhoneNumber;
 
 	@Override
@@ -56,11 +53,6 @@ public class MainActivity extends Activity {
 
 	public void doThis() throws Exception {
 		getPhoneNumber();
-		adapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, text);
-		view = (ListView) findViewById(R.id.list);
-		view.setAdapter(adapter);
-		view.invalidate();
 		linkButtons();
 		getPhoneNumber();
 		Log.i("MyPhoneNumber", myPhoneNumber);
@@ -171,10 +163,6 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {// getting location in button click
 				updateGPS(); // then update display
-				text.clear();
-				text.add("lat:" + lat);
-				text.add("lon:" + lon);
-				adapter.notifyDataSetChanged();
 			}
 		});
 		createEvent.setOnClickListener(new View.OnClickListener() {
@@ -200,9 +188,6 @@ public class MainActivity extends Activity {
 
 				try {
 					groups = groupJson.execute("createGroup").get();
-					text.clear();
-					text.add("Group Created");
-					adapter.notifyDataSetChanged();
 				} catch (Exception e) {
 					Log.i("Failure in create Group", e.toString());
 				}
@@ -230,21 +215,11 @@ public class MainActivity extends Activity {
 				String time = timeFormat.format(calendar.getTime());
 				eventJson.execute("checkIn", myPhoneNumber, "id", date, time,
 						lat + "", lon + "");
-				text.clear();
-				text.add("Checked In for Event");
-				adapter.notifyDataSetChanged();
+				Toast.makeText(getApplicationContext(), "Checked In",
+						Toast.LENGTH_LONG).show();
 			}
 
 		});
-	}
-
-	public void printToScreen(Object[] arrayList) {
-		text.clear();
-		for (int x = 0; x < arrayList.length; x++) {
-			text.add(arrayList[x].toString());
-		}
-
-		adapter.notifyDataSetChanged();
 	}
 
 	public double calculateMiles(double latitude, double longitude) {
@@ -282,6 +257,9 @@ public class MainActivity extends Activity {
 		if (l != null) {
 			lat = l.getLatitude();
 			lon = l.getLongitude();
+			Toast.makeText(getApplicationContext(),
+					"Latitude:" + lat + "\nLongitude:" + lon, Toast.LENGTH_LONG)
+					.show();
 		}
 	}
 }

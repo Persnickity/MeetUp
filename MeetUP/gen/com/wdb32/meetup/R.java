@@ -989,6 +989,7 @@ containing a value of this type.
     }
     public static final class id {
         public static final int CheckIn=0x7f05004a;
+        public static final int LinearLayout1=0x7f050044;
         public static final int TextView1=0x7f05003d;
         public static final int action_bar=0x7f05001c;
         public static final int action_bar_activity_content=0x7f050015;
@@ -1029,7 +1030,6 @@ containing a value of this type.
         public static final int idfield=0x7f05003e;
         public static final int ifRoom=0x7f05000a;
         public static final int image=0x7f050027;
-        public static final int list=0x7f050044;
         public static final int listMode=0x7f050001;
         public static final int list_item=0x7f050029;
         public static final int middle=0x7f050012;
