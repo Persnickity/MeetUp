@@ -62,15 +62,12 @@ public class MainActivity extends Activity {
 		view.setAdapter(adapter);
 		view.invalidate();
 		linkButtons();
-		try {
-			getPhoneNumber();
-			Log.i("MyPhoneNumber", myPhoneNumber);
-			accounts.clear();
-			accountJson = new AccountJson();
-			accounts = accountJson.execute("CheckMemberShip", myPhoneNumber)
-					.get();
-			Log.i("Size Is", accounts.size() + "");// accounts.get(0).toString());
-		} catch (Exception e) {
+		getPhoneNumber();
+		Log.i("MyPhoneNumber", myPhoneNumber);
+		accounts.clear();
+		// accountJson = new AccountJson();
+		accounts = accountJson.execute("CheckMemberShip", myPhoneNumber).get();
+		if (accounts.size() == 0) {
 			Intent createInfo = new Intent(MainActivity.this, GetName.class);
 			startActivityForResult(createInfo, 4);
 		}

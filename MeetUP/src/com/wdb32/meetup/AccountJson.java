@@ -47,9 +47,11 @@ public class AccountJson extends AsyncTask<String, Void, ArrayList<Account>> {
 		return accounts;
 	}
 
-	private void checkMembership(String number) {
+	private void checkMembership(String number) throws Exception {
 		accounts.clear();
+		getAll();
 		for (int x = 0; x < accounts.size(); x++) {
+			Log.i("LOOP", accounts.get(x).getNum());
 			if (accounts.get(x).getNum().equals(number)) {
 				return;
 			}
@@ -95,13 +97,13 @@ public class AccountJson extends AsyncTask<String, Void, ArrayList<Account>> {
 		while ((inputLine = in.readLine()) != null) {
 			response.append(inputLine);
 		}
-
 		in.close();
 		JsonParser jp = new JsonParser();
 		JsonElement root = jp.parse(response.toString());
-		JsonArray array = root.getAsJsonObject().get("Users").getAsJsonArray();
+		JsonArray array = root.getAsJsonObject().get("users").getAsJsonArray();
+		Log.i("Getting ALL", array.size() + "");
 		for (int x = 0; x < array.size(); x++) {
-			accounts.add(new Account(array.get(0).getAsJsonObject()));
+			accounts.add(new Account(array.get(x).getAsJsonObject()));
 		}
 	}
 }
