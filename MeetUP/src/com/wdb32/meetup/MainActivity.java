@@ -70,6 +70,7 @@ public class MainActivity extends Activity {
 		if (accounts.size() == 0) {
 			Intent createInfo = new Intent(MainActivity.this, GetName.class);
 			startActivityForResult(createInfo, 4);
+		} else {
 		}
 
 	}
@@ -222,7 +223,6 @@ public class MainActivity extends Activity {
 				updateGPS();
 				// phone,eventid,date,time,lat,lon
 				Calendar calendar = Calendar.getInstance();
-
 				SimpleDateFormat dateFormat = new SimpleDateFormat(
 						"dd:MMM:yyyy");
 				String date = dateFormat.format(calendar.getTime());
@@ -232,7 +232,6 @@ public class MainActivity extends Activity {
 						lat + "", lon + "");
 				text.clear();
 				text.add("Checked In for Event");
-
 				adapter.notifyDataSetChanged();
 			}
 
