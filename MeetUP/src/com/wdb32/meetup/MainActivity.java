@@ -64,11 +64,12 @@ public class MainActivity extends Activity {
 		linkButtons();
 		try {
 			getPhoneNumber();
+			Log.i("MyPhoneNumber", myPhoneNumber);
 			accounts.clear();
 			accountJson = new AccountJson();
 			accounts = accountJson.execute("CheckMemberShip", myPhoneNumber)
 					.get();
-			Log.i("Member Is", accounts.get(0).toString());
+			Log.i("Size Is", accounts.size() + "");// accounts.get(0).toString());
 		} catch (Exception e) {
 			Intent createInfo = new Intent(MainActivity.this, GetName.class);
 			startActivityForResult(createInfo, 4);
