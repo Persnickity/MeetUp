@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">MeetUP</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Welcome to Meetup. It appears you this is your first visit, Please insert your name so we can add you to our records</string>
+    <string name="title_activity_create_event_info">CreateEventInfo</string>
+    <string name="title_activity_edit_event_info">EditEventInfo</string>
+    <string name="title_activity_get_name">GetName</string>
+    <string name="title_activity_add_to_group">AddToGroup</string>
+
+</resources>
